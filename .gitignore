@@ -1,0 +1,22 @@
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# OS junk
+.DS_Store
+
+# Environment / local config
+.env
+.env.*
+
+# SQLite databases and journal files
+*.db
+*.db-journal
+
+# Generated RVOL output snapshots
+data/rvol_results_*.json
+
+# Logs
+logs/
+*.log
+
