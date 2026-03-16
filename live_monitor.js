@@ -1,0 +1,407 @@
+// live_monitor.js
+// Live monitoring of top RVOL assets using Hyperliquid WebSocket L2 book and trades.
+
+const Database = require('better-sqlite3');
+const WebSocket = require('ws');
+const path = require('path');
+
+const DATA_DIR = path.join(__dirname, 'data');
+const DB_PATH = path.join(DATA_DIR, 'hyperliquid_rvol.db');
+
+const WS_URL = 'wss://api.hyperliquid.xyz/ws';
+
+// Configurable parameters
+const SNAPSHOT_MODE = 'preopen'; // or 'live'
+const TOP_N_ASSETS = 5;
+const MAX_COINS_TO_SUBSCRIBE = 10;
+
+// Spread/depth thresholds
+const MAX_SPREAD_PCT = 0.1; // 0.1%
+const DEPTH_PCT = 1; // +-1% around mid price
+
+// Trade delta window (in ms)
+const TRADE_WINDOW_MS = 60 * 1000; // 1 minute
+
+function openDatabase() {
+  const db = new Database(DB_PATH);
+  db.pragma('journal_mode = WAL');
+  // Ensure the report table exists (in case rvol_scanner hasn't been run since this table was added)
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS report (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      trading_date TEXT NOT NULL,
+      snapshot_mode TEXT NOT NULL,
+      asset TEXT NOT NULL,
+      rvol REAL NOT NULL,
+      current_12h_volume_usd REAL,
+      day_ntl_vlm REAL,
+      open_interest REAL,
+      oi_24h_vol_ratio REAL,
+      funding REAL,
+      price REAL,
+      btc_corr REAL,
+      run_timestamp INTEGER NOT NULL
+    );
+  `);
+  return db;
+}
+
+function getLatestReportAssets(db) {
+  // Get the latest trading_date for the chosen snapshot_mode
+  const row = db
+    .prepare(
+      `
+      SELECT trading_date
+      FROM report
+      WHERE snapshot_mode = ?
+      ORDER BY trading_date DESC
+      LIMIT 1
+    `
+    )
+    .get(SNAPSHOT_MODE);
+
+  if (!row) {
+    console.log('No report rows found for snapshot mode:', SNAPSHOT_MODE);
+    return [];
+  }
+
+  const tradingDate = row.trading_date;
+
+  const assets = db
+    .prepare(
+      `
+      SELECT asset, rvol
+      FROM report
+      WHERE snapshot_mode = ?
+        AND trading_date = ?
+      ORDER BY rvol DESC
+      LIMIT ?
+    `
+    )
+    .all(SNAPSHOT_MODE, tradingDate, TOP_N_ASSETS);
+
+  console.log(
+    `Monitoring top ${assets.length} assets from report for trading_date=${tradingDate}, snapshot_mode=${SNAPSHOT_MODE}`
+  );
+
+  return assets.map((a) => a.asset);
+}
+
+function createWsConnection(coins) {
+  if (!coins || coins.length === 0) {
+    console.log('No coins to monitor. Exiting.');
+    process.exit(0);
+  }
+
+  const coinsToUse = coins.slice(0, MAX_COINS_TO_SUBSCRIBE);
+  console.log('Subscribing to coins:', coinsToUse.join(', '));
+
+  const state = {
+    books: new Map(), // coin -> { bids: [[px, qty], ...], asks: [[px, qty], ...] }
+    trades: new Map(), // coin -> [{ side, px, sz, ts }, ...]
+  };
+
+  const ws = new WebSocket(WS_URL);
+  let debugMsgCount = 0;
+
+  ws.on('open', () => {
+    console.log('WebSocket connected to Hyperliquid.');
+
+    for (const coin of coinsToUse) {
+      const subMsg = {
+        method: 'subscribe',
+        subscription: {
+          type: 'l2Book',
+          coin,
+        },
+      };
+      ws.send(JSON.stringify(subMsg));
+
+      const tradesMsg = {
+        method: 'subscribe',
+        subscription: {
+          type: 'trades',
+          coin,
+        },
+      };
+      ws.send(JSON.stringify(tradesMsg));
+    }
+  });
+
+  ws.on('message', (data) => {
+    try {
+      const msg = JSON.parse(data.toString());
+
+      // Log a few raw messages to understand payload shape
+      if (debugMsgCount < 5) {
+        console.log('WS raw message:', JSON.stringify(msg).slice(0, 400));
+        debugMsgCount += 1;
+      }
+
+      handleChannelMessage(state, msg);
+    } catch (e) {
+      console.error('Failed to parse WS message:', e.message || e);
+    }
+  });
+
+  ws.on('error', (err) => {
+    console.error('WebSocket error:', err.message || err);
+  });
+
+  ws.on('close', (code, reason) => {
+    console.log('WebSocket closed:', code, reason?.toString());
+  });
+
+  // Periodically print current metrics
+  setInterval(() => {
+    printLiveMetrics(state);
+  }, 5000);
+}
+
+function handleChannelMessage(state, msg) {
+  const channel = msg.channel;
+
+  // Hyperliquid l2Book shape:
+  // { channel: "l2Book", data: { coin, time, levels: [bids[], asks[]] } }
+  if (channel === 'l2Book') {
+    const data = msg.data;
+    if (!data || !data.coin || !Array.isArray(data.levels) || data.levels.length < 2) return;
+
+    const coin = data.coin;
+    const [rawBids, rawAsks] = data.levels;
+
+    if (!Array.isArray(rawBids) || !Array.isArray(rawAsks)) return;
+
+    // Convert [{ px, sz, n }, ...] → [[px, sz], ...] as numbers
+    const bids = rawBids
+      .map((l) => [parseFloat(l.px), parseFloat(l.sz)])
+      .filter(([px, sz]) => Number.isFinite(px) && Number.isFinite(sz));
+
+    const asks = rawAsks
+      .map((l) => [parseFloat(l.px), parseFloat(l.sz)])
+      .filter(([px, sz]) => Number.isFinite(px) && Number.isFinite(sz));
+
+    if (bids.length === 0 || asks.length === 0) return;
+
+    state.books.set(coin, { bids, asks });
+  }
+
+  // Hyperliquid trades shape:
+  // { channel: "trades", data: [ { coin, side, px, sz, time, ... }, ... ] }
+  if (channel === 'trades') {
+    const data = msg.data;
+    if (!Array.isArray(data)) return;
+
+    const nowTs = Date.now();
+
+    for (const t of data) {
+      const coin = t.coin;
+      if (!coin) continue;
+
+      let arr = state.trades.get(coin);
+      if (!arr) {
+        arr = [];
+        state.trades.set(coin, arr);
+      }
+
+      // Try to adapt to multiple possible trade shapes
+      const side = (t.s || t.side || t.direction || '').toString().toUpperCase();
+      const px = parseFloat(t.px ?? t.p ?? t.price);
+      const sz = parseFloat(t.sz ?? t.q ?? t.size);
+      const ts =
+        typeof t.time === 'number'
+          ? t.time
+          : typeof t.ts === 'number'
+          ? t.ts
+          : typeof t.timestamp === 'number'
+          ? t.timestamp
+          : nowTs;
+
+      if (!Number.isFinite(px) || !Number.isFinite(sz)) continue;
+
+      arr.push({ side, px, sz, ts });
+    }
+
+    const now = Date.now();
+    const cutoff = nowTs - TRADE_WINDOW_MS;
+
+    for (const [coin, arr] of state.trades.entries()) {
+      state.trades.set(
+        coin,
+        arr.filter((t) => t.ts >= cutoff)
+      );
+    }
+  }
+}
+
+function computeSpreadAndDepth(book) {
+  if (!book) return null;
+  const { bids, asks } = book;
+  if (!Array.isArray(bids) || !Array.isArray(asks) || bids.length === 0 || asks.length === 0) {
+    return null;
+  }
+
+  const bestBid = parseFloat(bids[0][0]);
+  const bestAsk = parseFloat(asks[0][0]);
+  if (!Number.isFinite(bestBid) || !Number.isFinite(bestAsk) || bestBid <= 0 || bestAsk <= 0) {
+    return null;
+  }
+
+  const mid = (bestBid + bestAsk) / 2;
+  const spreadAbs = bestAsk - bestBid;
+  const spreadPct = (spreadAbs / mid) * 100;
+
+  const lower = mid * (1 - DEPTH_PCT / 100);
+  const upper = mid * (1 + DEPTH_PCT / 100);
+
+  let bidDepth = 0;
+  let askDepth = 0;
+
+  for (const [pxRaw, szRaw] of bids) {
+    const px = parseFloat(pxRaw);
+    const sz = parseFloat(szRaw);
+    if (!Number.isFinite(px) || !Number.isFinite(sz)) continue;
+    if (px >= lower) {
+      bidDepth += px * sz;
+    } else {
+      break;
+    }
+  }
+
+  for (const [pxRaw, szRaw] of asks) {
+    const px = parseFloat(pxRaw);
+    const sz = parseFloat(szRaw);
+    if (!Number.isFinite(px) || !Number.isFinite(sz)) continue;
+    if (px <= upper) {
+      askDepth += px * sz;
+    } else {
+      break;
+    }
+  }
+
+  return {
+    bestBid,
+    bestAsk,
+    mid,
+    spreadPct,
+    bidDepth,
+    askDepth,
+  };
+}
+
+function computeTradeDelta(trades) {
+  if (!Array.isArray(trades) || trades.length === 0) {
+    return { buyNotional: 0, sellNotional: 0, delta: 0, imbalancePct: 0 };
+  }
+
+  let buyNotional = 0;
+  let sellNotional = 0;
+
+  for (const t of trades) {
+    if (!Number.isFinite(t.px) || !Number.isFinite(t.sz)) continue;
+    const notional = t.px * t.sz;
+    const side = (t.side || '').toUpperCase();
+    if (side === 'B') {
+      buyNotional += notional;
+    } else if (side === 'S') {
+      sellNotional += notional;
+    }
+  }
+
+  const delta = buyNotional - sellNotional;
+  const total = buyNotional + sellNotional;
+  const imbalancePct = total > 0 ? (delta / total) * 100 : 0;
+
+  return { buyNotional, sellNotional, delta, imbalancePct };
+}
+
+function printLiveMetrics(state) {
+  const now = new Date().toISOString();
+  console.log(`\n=== Live monitor @ ${now} ===`);
+
+  const rows = [];
+
+  for (const [coin, book] of state.books.entries()) {
+    const spreadDepth = computeSpreadAndDepth(book);
+    if (!spreadDepth) {
+      continue;
+    }
+
+    const trades = state.trades.get(coin) || [];
+    const deltaStats = computeTradeDelta(trades);
+
+    const isSpreadOk = spreadDepth.spreadPct <= MAX_SPREAD_PCT;
+    const isDirectionStrong = Math.abs(deltaStats.imbalancePct) >= 20; // configurable
+
+    const totalDepth = spreadDepth.bidDepth + spreadDepth.askDepth;
+
+    // Simple ranking score: prefer tight spread, big depth, strong directional flow
+    const score = isSpreadOk
+      ? Math.abs(deltaStats.imbalancePct) * (totalDepth / 1_000_000)
+      : 0;
+
+    rows.push({
+      coin,
+      spreadPct: spreadDepth.spreadPct,
+      bidDepth: spreadDepth.bidDepth,
+      askDepth: spreadDepth.askDepth,
+      totalDepth,
+      delta: deltaStats.delta,
+      imbalancePct: deltaStats.imbalancePct,
+      isSpreadOk,
+      isDirectionStrong,
+      score,
+    });
+  }
+
+  if (rows.length === 0) {
+    console.log('No book data yet.');
+    return;
+  }
+
+  rows.sort((a, b) => b.score - a.score);
+
+  console.table(
+    rows.map((r) => ({
+      Coin: r.coin,
+      'Score': r.score.toFixed(2),
+      'Spread %': r.spreadPct.toFixed(3),
+      [`Depth ±${DEPTH_PCT}% ($)`]: r.totalDepth.toFixed(0),
+      'Delta ($)': r.delta.toFixed(0),
+      'Imbalance %': r.imbalancePct.toFixed(1),
+      'Tight Spread': r.isSpreadOk,
+      'Directional': r.isDirectionStrong,
+    }))
+  );
+
+  const top = rows[0];
+  console.log(
+    `Top live candidate: ${top.coin} | score=${top.score.toFixed(
+      2
+    )} | spread=${top.spreadPct.toFixed(3)}% | depth±${DEPTH_PCT}%=$${top.totalDepth.toFixed(
+      0
+    )} | delta=$${top.delta.toFixed(0)} | imbalance=${top.imbalancePct.toFixed(1)}%`
+  );
+}
+
+function main() {
+  const db = openDatabase();
+  try {
+    const assets = getLatestReportAssets(db);
+    createWsConnection(assets);
+  } finally {
+    // keep DB open only for initial read
+    db.close();
+  }
+}
+
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  getLatestReportAssets,
+  computeSpreadAndDepth,
+  computeTradeDelta,
+};
+

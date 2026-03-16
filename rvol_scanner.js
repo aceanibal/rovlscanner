@@ -14,14 +14,39 @@ const REQUEST_TIMEOUT_MS = 10_000;
 const CANDLE_INTERVAL = '1h';
 const DATA_DIR = path.join(__dirname, 'data');
 const DB_PATH = path.join(DATA_DIR, 'hyperliquid_rvol.db');
+const MIN_DAY_NTL_VLM = 10_000_000;
+const MIN_OPEN_INTEREST = 0;
+
+// Snapshot modes:
+// - 'preopen': analytics snapshot using candles up to 9:00am ET (for 9–12pm prep/backtest)
+// - 'live':    use candles up to the latest available bar at run time
+const SNAPSHOT_MODE_PREOPEN = 'preopen';
+const SNAPSHOT_MODE_LIVE = 'live';
 
 // --- Helpers ---
 
-// 5 days ago in ms
-function getFiveDaysAgoMs() {
-  const now = Date.now();
+// Compute the end timestamp (ms since epoch) for the candle snapshot,
+// depending on snapshot mode.
+function getSnapshotEndMs(tradingDate, snapshotMode) {
+  if (snapshotMode === SNAPSHOT_MODE_PREOPEN) {
+    // 9:00am ET on that trading date
+    const dt = DateTime.fromISO(tradingDate, { zone: 'America/New_York' }).set({
+      hour: 9,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+    });
+    return dt.toMillis();
+  }
+
+  // Live mode: use current time
+  return Date.now();
+}
+
+// 5 days before a given end timestamp (ms)
+function getFiveDaysAgoMs(endTimeMs) {
   const fiveDaysMs = 5 * 24 * 60 * 60 * 1000;
-  return now - fiveDaysMs;
+  return endTimeMs - fiveDaysMs;
 }
 
 // Simple sleep utility for rate-limiting
@@ -47,30 +72,36 @@ function formatUsd(value) {
 
 function formatPrice(value) {
   if (!Number.isFinite(value)) return '0';
+  // Show more precision for sub-dollar assets so they don't round to 0.00
+  const fractionDigits = value < 1 ? 6 : 2;
   return value.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
   });
 }
 
-// Simple CLI option parsing for BTC correlation filter
+function formatFundingPercent(value) {
+  if (value == null || !Number.isFinite(value)) return 'n/a';
+  const pct = value * 100;
+  return `${pct.toFixed(4)}%`;
+}
+
+// Simple CLI option parsing
 function parseCliOptions() {
   const args = process.argv.slice(2);
   const opts = {
-    btcCorrMin: null,
-    btcCorrMax: null,
+    snapshotMode: SNAPSHOT_MODE_PREOPEN,
     forceRefresh: false,
   };
 
   for (const arg of args) {
-    if (arg.startsWith('--btc-corr-min=')) {
-      const v = parseFloat(arg.split('=')[1]);
-      if (Number.isFinite(v)) opts.btcCorrMin = v;
-    } else if (arg.startsWith('--btc-corr-max=')) {
-      const v = parseFloat(arg.split('=')[1]);
-      if (Number.isFinite(v)) opts.btcCorrMax = v;
-    } else if (arg === '--force-refresh') {
+    if (arg === '--force-refresh') {
       opts.forceRefresh = true;
+    } else if (arg.startsWith('--snapshot-mode=')) {
+      const v = arg.split('=')[1];
+      if (v === SNAPSHOT_MODE_PREOPEN || v === SNAPSHOT_MODE_LIVE) {
+        opts.snapshotMode = v;
+      }
     }
   }
 
@@ -90,15 +121,34 @@ const client = axios.create({
 // --- Meta fetching & parsing ---
 
 /**
- * Fetches raw meta response from Hyperliquid.
+ * Fetches universe + asset context (markPx, OI, 24h volume, funding, etc.)
+ * from Hyperliquid using the metaAndAssetCtxs info endpoint.
  */
-async function fetchMeta() {
+async function fetchMetaAndAssetCtxs() {
   const body = {
-    type: 'meta',
-    dex: '',
+    type: 'metaAndAssetCtxs',
   };
 
   const { data } = await client.post('/info', body);
+
+  // The API may return either an object with { universe, assetCtxs }
+  // or an array like [universePart, assetCtxsPart]. Normalize here.
+  if (Array.isArray(data)) {
+    const universePart = data[0] || {};
+    const assetCtxsPart = data[1] || {};
+    const universe = Array.isArray(universePart.universe)
+      ? universePart.universe
+      : Array.isArray(universePart)
+      ? universePart
+      : [];
+    const assetCtxs = Array.isArray(assetCtxsPart.assetCtxs)
+      ? assetCtxsPart.assetCtxs
+      : Array.isArray(assetCtxsPart)
+      ? assetCtxsPart
+      : [];
+    return { universe, assetCtxs, _raw: data };
+  }
+
   return data;
 }
 
@@ -120,17 +170,17 @@ function extractPerpAssets(meta) {
 // --- Candle fetching & parsing ---
 
 /**
- * Fetches 1h candles for a given coin from startTimeMs up to now.
+ * Fetches 1h candles for a given coin from startTimeMs up to endTimeMs.
  * Returns an array of parsed, sorted candle objects.
  */
-async function fetchCandles(coin, startTimeMs) {
+async function fetchCandles(coin, startTimeMs, endTimeMs) {
   const body = {
     type: 'candleSnapshot',
     req: {
       coin,
       interval: CANDLE_INTERVAL,
       startTime: startTimeMs,
-      endTime: null,
+      endTime: endTimeMs,
     },
   };
 
@@ -325,15 +375,55 @@ function openDatabase() {
       created_at INTEGER NOT NULL,
       results_json TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS report (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      trading_date TEXT NOT NULL,
+      snapshot_mode TEXT NOT NULL,
+      asset TEXT NOT NULL,
+      rvol REAL NOT NULL,
+      current_12h_volume_usd REAL,
+      day_ntl_vlm REAL,
+      open_interest REAL,
+      oi_24h_vol_ratio REAL,
+      funding REAL,
+      price REAL,
+      btc_corr REAL,
+      run_timestamp INTEGER NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS asset_ctx_snapshots (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      trading_date TEXT NOT NULL,
+      coin TEXT NOT NULL,
+      mark_px REAL,
+      open_interest REAL,
+      day_ntl_vlm REAL,
+      funding REAL,
+      oracle_px REAL,
+      mid_px REAL,
+      prev_day_px REAL,
+      premium REAL,
+      impact_px_buy REAL,
+      impact_px_sell REAL,
+      created_at INTEGER NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_asset_ctx_snapshots_date_coin
+      ON asset_ctx_snapshots(trading_date, coin);
   `);
   return db;
 }
 
-function getCachedRun(db, tradingDate) {
+function makeTradingKey(tradingDate, snapshotMode) {
+  return `${tradingDate}:${snapshotMode}`;
+}
+
+function getCachedRun(db, tradingKey) {
   const stmt = db.prepare(
     'SELECT trading_date, created_at, results_json FROM runs WHERE trading_date = ? LIMIT 1'
   );
-  const row = stmt.get(tradingDate);
+  const row = stmt.get(tradingKey);
   if (!row) return null;
   try {
     const results = JSON.parse(row.results_json);
@@ -344,39 +434,297 @@ function getCachedRun(db, tradingDate) {
   }
 }
 
-function saveRun(db, tradingDate, results) {
+function saveRun(db, tradingKey, results) {
   const stmt = db.prepare(
     'INSERT OR REPLACE INTO runs (trading_date, created_at, results_json) VALUES (?, ?, ?)'
   );
   const createdAt = Date.now();
   const resultsJson = JSON.stringify(results);
-  stmt.run(tradingDate, createdAt, resultsJson);
+  stmt.run(tradingKey, createdAt, resultsJson);
+}
+
+function saveAssetCtxSnapshots(db, tradingKey, assetCtxs, universe) {
+  if (!assetCtxs || !Array.isArray(assetCtxs) || !Array.isArray(universe)) {
+    return;
+  }
+
+  const createdAt = Date.now();
+  const insertStmt = db.prepare(
+    `
+      INSERT INTO asset_ctx_snapshots (
+        trading_date,
+        coin,
+        mark_px,
+        open_interest,
+        day_ntl_vlm,
+        funding,
+        oracle_px,
+        mid_px,
+        prev_day_px,
+        premium,
+        impact_px_buy,
+        impact_px_sell,
+        created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `
+  );
+
+  const deleteStmt = db.prepare('DELETE FROM asset_ctx_snapshots WHERE trading_date = ?');
+
+  const tx = db.transaction(() => {
+    deleteStmt.run(tradingKey);
+
+    for (let i = 0; i < assetCtxs.length; i++) {
+      const ctx = assetCtxs[i];
+      const meta = universe[i];
+      if (!meta || !meta.name || meta.isDelisted === true || !ctx) {
+        continue;
+      }
+
+      const coin = meta.name;
+
+      const markPx = ctx.markPx != null ? parseFloat(ctx.markPx) : null;
+      const openInterest = ctx.openInterest != null ? parseFloat(ctx.openInterest) : null;
+      const dayNtlVlm = ctx.dayNtlVlm != null ? parseFloat(ctx.dayNtlVlm) : null;
+      const funding = ctx.funding != null ? parseFloat(ctx.funding) : null;
+      const oraclePx = ctx.oraclePx != null ? parseFloat(ctx.oraclePx) : null;
+      const midPx = ctx.midPx != null ? parseFloat(ctx.midPx) : null;
+      const prevDayPx = ctx.prevDayPx != null ? parseFloat(ctx.prevDayPx) : null;
+      const premium = ctx.premium != null ? parseFloat(ctx.premium) : null;
+
+      let impactBuy = null;
+      let impactSell = null;
+      if (Array.isArray(ctx.impactPxs) && ctx.impactPxs.length >= 2) {
+        impactBuy =
+          ctx.impactPxs[0] != null && ctx.impactPxs[0] !== ''
+            ? parseFloat(ctx.impactPxs[0])
+            : null;
+        impactSell =
+          ctx.impactPxs[1] != null && ctx.impactPxs[1] !== ''
+            ? parseFloat(ctx.impactPxs[1])
+            : null;
+      }
+
+      insertStmt.run(
+        tradingKey,
+        coin,
+        Number.isFinite(markPx) ? markPx : null,
+        Number.isFinite(openInterest) ? openInterest : null,
+        Number.isFinite(dayNtlVlm) ? dayNtlVlm : null,
+        Number.isFinite(funding) ? funding : null,
+        Number.isFinite(oraclePx) ? oraclePx : null,
+        Number.isFinite(midPx) ? midPx : null,
+        Number.isFinite(prevDayPx) ? prevDayPx : null,
+        Number.isFinite(premium) ? premium : null,
+        Number.isFinite(impactBuy) ? impactBuy : null,
+        Number.isFinite(impactSell) ? impactSell : null,
+        createdAt
+      );
+    }
+  });
+
+  tx();
+}
+
+function saveReport(db, tradingDate, snapshotMode, results) {
+  if (!db || !results || !Array.isArray(results) || results.length === 0) {
+    return;
+  }
+
+  const deleteStmt = db.prepare(
+    'DELETE FROM report WHERE trading_date = ? AND snapshot_mode = ?'
+  );
+
+  const insertStmt = db.prepare(
+    `
+      INSERT INTO report (
+        trading_date,
+        snapshot_mode,
+        asset,
+        rvol,
+        current_12h_volume_usd,
+        day_ntl_vlm,
+        open_interest,
+        oi_24h_vol_ratio,
+        funding,
+        price,
+        btc_corr,
+        run_timestamp
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `
+  );
+
+  const tx = db.transaction(() => {
+    deleteStmt.run(tradingDate, snapshotMode);
+
+    for (const r of results) {
+      let oiVolRatio = null;
+      if (
+        Number.isFinite(r.openInterest) &&
+        Number.isFinite(r.dayNtlVlm) &&
+        r.dayNtlVlm > 0
+      ) {
+        oiVolRatio = r.openInterest / r.dayNtlVlm;
+      }
+
+      insertStmt.run(
+        tradingDate,
+        snapshotMode,
+        r.asset,
+        r.rvol,
+        Number.isFinite(r.current12hVolumeUsd) ? r.current12hVolumeUsd : null,
+        Number.isFinite(r.dayNtlVlm) ? r.dayNtlVlm : null,
+        Number.isFinite(r.openInterest) ? r.openInterest : null,
+        Number.isFinite(oiVolRatio) ? oiVolRatio : null,
+        Number.isFinite(r.funding) ? r.funding : null,
+        Number.isFinite(r.price) ? r.price : null,
+        Number.isFinite(r.btcCorr) ? r.btcCorr : null,
+        Number.isFinite(r.runTimestamp) ? r.runTimestamp : Date.now()
+      );
+    }
+  });
+
+  tx();
 }
 
 // --- JSON results file ---
 
-function writeResultsFile(tradingDate, results) {
+function writeResultsFile(tradingDate, snapshotMode, results) {
   ensureDataDir();
-  const filePath = path.join(DATA_DIR, `rvol_results_${tradingDate}.json`);
+  const modeSuffix = snapshotMode === SNAPSHOT_MODE_LIVE ? 'live' : 'preopen';
+  const filePath = path.join(DATA_DIR, `rvol_results_${tradingDate}_${modeSuffix}.json`);
   fs.writeFileSync(filePath, JSON.stringify(results, null, 2), 'utf8');
   console.log(`Wrote results file: ${filePath}`);
 }
 
+// --- Asset context loading and market filters ---
+
+function loadAssetCtxByDate(db, tradingKey) {
+  const stmt = db.prepare(
+    `
+      SELECT coin,
+             mark_px,
+             open_interest,
+             day_ntl_vlm,
+             funding,
+             oracle_px,
+             mid_px,
+             prev_day_px,
+             premium,
+             impact_px_buy,
+             impact_px_sell
+      FROM asset_ctx_snapshots
+      WHERE trading_date = ?
+    `
+  );
+
+  const rows = stmt.all(tradingKey);
+  const map = new Map();
+  for (const row of rows) {
+    map.set(row.coin, {
+      markPx: row.mark_px,
+      openInterest: row.open_interest,
+      dayNtlVlm: row.day_ntl_vlm,
+      funding: row.funding,
+      oraclePx: row.oracle_px,
+      midPx: row.mid_px,
+      prevDayPx: row.prev_day_px,
+      premium: row.premium,
+      impactPxBuy: row.impact_px_buy,
+      impactPxSell: row.impact_px_sell,
+    });
+  }
+  return map;
+}
+
+function applyMarketContextToResults(results, ctxMap) {
+  if (!results || !Array.isArray(results) || !ctxMap) return results || [];
+
+  return results.map((r) => {
+    const ctx = ctxMap.get(r.asset);
+    if (!ctx) return r;
+    return {
+      ...r,
+      dayNtlVlm: ctx.dayNtlVlm,
+      openInterest: ctx.openInterest,
+      funding: ctx.funding,
+      markPx: ctx.markPx,
+    };
+  });
+}
+
+function filterByMarketContext(results) {
+  if (!results || !Array.isArray(results)) return [];
+  const filtered = results.filter((r) => {
+    if (!Number.isFinite(r.dayNtlVlm) || r.dayNtlVlm < MIN_DAY_NTL_VLM) {
+      return false;
+    }
+    if (Number.isFinite(MIN_OPEN_INTEREST) && MIN_OPEN_INTEREST > 0) {
+      if (!Number.isFinite(r.openInterest) || r.openInterest < MIN_OPEN_INTEREST) {
+        return false;
+      }
+    }
+    return true;
+  });
+  return filtered;
+}
+
 // --- Main RVOL scan logic ---
 
-async function performFreshScan(tradingDate, btcCorrMin, btcCorrMax) {
+async function performFreshScan(tradingDate, tradingKey, snapshotMode, db) {
   console.log(`No cache for trading date ${tradingDate}, fetching data from Hyperliquid...`);
 
-  console.log('Fetching meta...');
-  const meta = await fetchMeta();
-  const assets = extractPerpAssets(meta);
+  console.log('Fetching meta + asset context (markPx, OI, 24h volume, funding)...');
+  const metaAndCtx = await fetchMetaAndAssetCtxs();
+
+  try {
+    if (metaAndCtx && metaAndCtx._raw && Array.isArray(metaAndCtx._raw)) {
+      console.log(
+        'metaAndAssetCtxs returned array form. universe length:',
+        Array.isArray(metaAndCtx.universe) ? metaAndCtx.universe.length : 'n/a',
+        'assetCtxs length:',
+        Array.isArray(metaAndCtx.assetCtxs) ? metaAndCtx.assetCtxs.length : 'n/a'
+      );
+      console.log(
+        'Sample universe entries:',
+        Array.isArray(metaAndCtx.universe)
+          ? JSON.stringify(metaAndCtx.universe.slice(0, 3))
+          : 'n/a'
+      );
+      console.log(
+        'Sample assetCtx entries:',
+        Array.isArray(metaAndCtx.assetCtxs)
+          ? JSON.stringify(metaAndCtx.assetCtxs.slice(0, 3))
+          : 'n/a'
+      );
+    }
+  } catch (e) {
+    console.warn('Failed to log metaAndAssetCtxs debug info:', e.message || e);
+  }
+
+  const assets = extractPerpAssets(metaAndCtx);
   console.log(`Total assets in universe (filtered): ${assets.length}`);
+
+  if (db && metaAndCtx && Array.isArray(metaAndCtx.assetCtxs)) {
+    try {
+      saveAssetCtxSnapshots(db, tradingKey, metaAndCtx.assetCtxs, metaAndCtx.universe || []);
+      console.log(
+        `Saved ${metaAndCtx.assetCtxs.length} asset context snapshots for trading date ${tradingDate} into SQLite.`
+      );
+    } catch (e) {
+      console.warn(
+        'Failed to persist asset context snapshots to SQLite (continuing without DB write):',
+        e.message || e
+      );
+    }
+  }
 
   if (assets.length === 0) {
     throw new Error('No assets found in universe.');
   }
 
-  const startTimeMs = getFiveDaysAgoMs();
+  const snapshotEndMs = getSnapshotEndMs(tradingDate, snapshotMode);
+  const startTimeMs = getFiveDaysAgoMs(snapshotEndMs);
   const results = [];
   let btcCandles = null;
 
@@ -392,7 +740,7 @@ async function performFreshScan(tradingDate, btcCorrMin, btcCorrMax) {
     console.log(`Processing ${coin} (${i + 1}/${assets.length})`);
 
     try {
-      const candles = await fetchCandles(coin, startTimeMs);
+      const candles = await fetchCandles(coin, startTimeMs, snapshotEndMs);
 
       if (!candles || candles.length < 24) {
         console.log(`Skipping ${coin}: not enough candles (${candles.length}).`);
@@ -427,25 +775,9 @@ async function performFreshScan(tradingDate, btcCorrMin, btcCorrMax) {
     await sleep(50);
   }
 
-  if (btcCandles && (btcCorrMin != null || btcCorrMax != null)) {
-    console.log(
-      `Applying BTC correlation filter: min=${
-        btcCorrMin != null ? btcCorrMin.toFixed(2) : '-∞'
-      }, max=${btcCorrMax != null ? btcCorrMax.toFixed(2) : '+∞'}`
-    );
-  }
+  results.sort((a, b) => b.rvol - a.rvol);
 
-  const filteredResults = results.filter((r) => {
-    if (btcCorrMin == null && btcCorrMax == null) return true;
-    if (!Number.isFinite(r.btcCorr)) return false;
-    if (btcCorrMin != null && r.btcCorr < btcCorrMin) return false;
-    if (btcCorrMax != null && r.btcCorr > btcCorrMax) return false;
-    return true;
-  });
-
-  filteredResults.sort((a, b) => b.rvol - a.rvol);
-
-  return filteredResults;
+  return results;
 }
 
 function printResultsTable(results, tradingDate) {
@@ -454,13 +786,25 @@ function printResultsTable(results, tradingDate) {
     return;
   }
 
-  const table = results.map((r) => ({
-    Asset: r.asset,
-    RVOL: r.rvol.toFixed(2),
-    '12h Volume ($)': formatUsd(r.current12hVolumeUsd),
-    Price: formatPrice(r.price),
-    'BTC Corr': r.btcCorr != null && Number.isFinite(r.btcCorr) ? r.btcCorr.toFixed(2) : 'n/a',
-  }));
+  const table = results.map((r) => {
+    let oiVolRatio = 'n/a';
+    if (Number.isFinite(r.openInterest) && Number.isFinite(r.dayNtlVlm) && r.dayNtlVlm > 0) {
+      const ratio = r.openInterest / r.dayNtlVlm;
+      oiVolRatio = ratio.toFixed(2);
+    }
+
+    return {
+      Asset: r.asset,
+      RVOL: r.rvol.toFixed(2),
+      '12h Volume ($)': formatUsd(r.current12hVolumeUsd),
+      '24h Ntl Vol ($)': Number.isFinite(r.dayNtlVlm) ? formatUsd(r.dayNtlVlm) : 'n/a',
+      'OI ($)': Number.isFinite(r.openInterest) ? formatUsd(r.openInterest) : 'n/a',
+      'OI/24h Vol': oiVolRatio,
+      Funding: formatFundingPercent(r.funding),
+      Price: formatPrice(r.price),
+      'BTC Corr': r.btcCorr != null && Number.isFinite(r.btcCorr) ? r.btcCorr.toFixed(2) : 'n/a',
+    };
+  });
 
   console.log(`\n=== RVOL Results for ${tradingDate} ===`);
   console.table(table);
@@ -469,7 +813,11 @@ function printResultsTable(results, tradingDate) {
   console.log(
     `\nTop Asset in Play: ${top.asset} | RVOL: ${top.rvol.toFixed(
       2
-    )} | 12h Vol: $${formatUsd(top.current12hVolumeUsd)} | Price: $${formatPrice(
+    )} | 12h Vol: $${formatUsd(top.current12hVolumeUsd)} | 24h Ntl Vol: $${
+      Number.isFinite(top.dayNtlVlm) ? formatUsd(top.dayNtlVlm) : 'n/a'
+    } | OI: $${
+      Number.isFinite(top.openInterest) ? formatUsd(top.openInterest) : 'n/a'
+    } | Funding: ${formatFundingPercent(top.funding)} | Price: $${formatPrice(
       top.price
     )} | BTC Corr: ${
       top.btcCorr != null && Number.isFinite(top.btcCorr) ? top.btcCorr.toFixed(2) : 'n/a'
@@ -485,16 +833,15 @@ async function run() {
   console.log(`Current ET time: ${nowEt.toISO()} | Trading date: ${tradingDate}`);
 
   const options = parseCliOptions();
-  if (options.btcCorrMin != null || options.btcCorrMax != null) {
-    console.log(
-      `CLI BTC correlation filter requested: min=${
-        options.btcCorrMin != null ? options.btcCorrMin : '-∞'
-      }, max=${options.btcCorrMax != null ? options.btcCorrMax : '+∞'}`
-    );
-  }
   if (options.forceRefresh) {
     console.log('Force refresh enabled: ignoring any cached runs for today.');
   }
+
+  console.log(
+    `Snapshot mode: ${
+      options.snapshotMode === SNAPSHOT_MODE_PREOPEN ? 'preopen (9:00am ET snapshot)' : 'live'
+    }`
+  );
 
   ensureDataDir();
   const db = openDatabase();
@@ -502,40 +849,41 @@ async function run() {
   try {
     let results;
 
-    const cached = options.forceRefresh ? null : getCachedRun(db, tradingDate);
+    const tradingKey = makeTradingKey(tradingDate, options.snapshotMode);
+    const cached = options.forceRefresh ? null : getCachedRun(db, tradingKey);
 
     if (cached) {
       console.log(
-        `Using cached results for trading date ${tradingDate} (created at ${new Date(
+        `Using cached results for trading key ${tradingKey} (created at ${new Date(
           cached.createdAt
         ).toISOString()})`
       );
       results = cached.results;
     } else {
-      results = await performFreshScan(
-        tradingDate,
-        options.btcCorrMin,
-        options.btcCorrMax
-      );
-      saveRun(db, tradingDate, results);
-      writeResultsFile(tradingDate, results);
+      results = await performFreshScan(tradingDate, tradingKey, options.snapshotMode, db);
+      saveRun(db, tradingKey, results);
+      writeResultsFile(tradingDate, options.snapshotMode, results);
     }
 
-    // Apply BTC correlation filter on cached or freshly computed results
-    let finalResults = results;
-    if (options.btcCorrMin != null || options.btcCorrMax != null) {
-      console.log(
-        `Applying BTC correlation filter to loaded results: min=${
-          options.btcCorrMin != null ? options.btcCorrMin : '-∞'
-        }, max=${options.btcCorrMax != null ? options.btcCorrMax : '+∞'}`
-      );
-      finalResults = results.filter((r) => {
-        if (!Number.isFinite(r.btcCorr)) return false;
-        if (options.btcCorrMin != null && r.btcCorr < options.btcCorrMin) return false;
-        if (options.btcCorrMax != null && r.btcCorr > options.btcCorrMax) return false;
-        return true;
-      });
-    }
+    // Load market context for this trading date and apply filters
+    const ctxMap = loadAssetCtxByDate(db, tradingKey);
+    const withCtx = applyMarketContextToResults(results, ctxMap);
+    const finalResults = filterByMarketContext(withCtx);
+
+    saveReport(db, tradingDate, options.snapshotMode, finalResults);
+
+    console.log(
+      `Applied market context filters:\n` +
+        `- 24h notional volume >= ${formatUsd(
+          MIN_DAY_NTL_VLM
+        )}$ (drops illiquid / dead markets).\n` +
+        (MIN_OPEN_INTEREST > 0
+          ? `- Open interest >= ${formatUsd(
+              MIN_OPEN_INTEREST
+            )}$ (requires minimum open positions).\n`
+          : '') +
+        `Displayed columns: RVOL (12h vs 5d baseline), 12h notional volume, 24h notional volume, open interest, OI/24h volume ratio, funding %, price, BTC correlation.`
+    );
 
     printResultsTable(finalResults, tradingDate);
   } catch (err) {
@@ -551,7 +899,7 @@ if (require.main === module) {
 }
 
 module.exports = {
-  fetchMeta,
+  fetchMetaAndAssetCtxs,
   extractPerpAssets,
   fetchCandles,
   sleep,

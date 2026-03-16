@@ -1,0 +1,1712 @@
+[
+  {
+    "asset": "BLAST",
+    "rvol": 32.63109666347665,
+    "current12hVolumeUsd": 701078.311403,
+    "price": 0.000564,
+    "btcCorr": -0.0034335487415104397,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676154356
+  },
+  {
+    "asset": "ME",
+    "rvol": 18.00260582196312,
+    "current12hVolumeUsd": 512148.43663899996,
+    "price": 0.12569,
+    "btcCorr": 0.06426185122680149,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676162403
+  },
+  {
+    "asset": "FET",
+    "rvol": 7.6788349896171075,
+    "current12hVolumeUsd": 5143603.34697,
+    "price": 0.22614,
+    "btcCorr": 0.4033702161658642,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676129519
+  },
+  {
+    "asset": "kPEPE",
+    "rvol": 5.018938440367042,
+    "current12hVolumeUsd": 30461047.417453,
+    "price": 0.003987,
+    "btcCorr": 0.47394961036804795,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676113491
+  },
+  {
+    "asset": "kFLOKI",
+    "rvol": 4.279034628861859,
+    "current12hVolumeUsd": 262574.246503,
+    "price": 0.031563,
+    "btcCorr": 0.5189991043058352,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676147234
+  },
+  {
+    "asset": "CELO",
+    "rvol": 4.1220391943633965,
+    "current12hVolumeUsd": 405497.67292,
+    "price": 0.07894,
+    "btcCorr": 0.26166657839360685,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676156224
+  },
+  {
+    "asset": "NIL",
+    "rvol": 3.9399376241494233,
+    "current12hVolumeUsd": 138872.154842,
+    "price": 0.054161,
+    "btcCorr": 0.2371424664127946,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676171869
+  },
+  {
+    "asset": "FARTCOIN",
+    "rvol": 3.582470179834647,
+    "current12hVolumeUsd": 20705005.251077,
+    "price": 0.18382,
+    "btcCorr": 0.6306064768980987,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676163956
+  },
+  {
+    "asset": "CFX",
+    "rvol": 3.4977270973835095,
+    "current12hVolumeUsd": 650937.9089809998,
+    "price": 0.065355,
+    "btcCorr": 0.27833480987186676,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676115599
+  },
+  {
+    "asset": "INJ",
+    "rvol": 3.3387129936819986,
+    "current12hVolumeUsd": 1000807.42402,
+    "price": 3.1933,
+    "btcCorr": 0.6904107016561385,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676112710
+  },
+  {
+    "asset": "WLD",
+    "rvol": 3.3326344979370957,
+    "current12hVolumeUsd": 3950782.3019950003,
+    "price": 0.38411,
+    "btcCorr": 0.6491008526473098,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676118826
+  },
+  {
+    "asset": "BOME",
+    "rvol": 3.311486892384399,
+    "current12hVolumeUsd": 52944.34054399999,
+    "price": 0.000478,
+    "btcCorr": 0.4990307015599075,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676147633
+  },
+  {
+    "asset": "SUI",
+    "rvol": 2.9359456148382432,
+    "current12hVolumeUsd": 21889708.199849997,
+    "price": 1.0521,
+    "btcCorr": 0.7220382330741274,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676112955
+  },
+  {
+    "asset": "WIF",
+    "rvol": 2.7551755249249306,
+    "current12hVolumeUsd": 2537070.5033899997,
+    "price": 0.18652,
+    "btcCorr": 0.4656138836179904,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676138787
+  },
+  {
+    "asset": "REZ",
+    "rvol": 2.6928461984535166,
+    "current12hVolumeUsd": 675026.40815,
+    "price": 0.003795,
+    "btcCorr": 0.13648379675779088,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676151943
+  },
+  {
+    "asset": "BLUR",
+    "rvol": 2.626459313563858,
+    "current12hVolumeUsd": 104699.86196600001,
+    "price": 0.020365,
+    "btcCorr": 0.4556200313245608,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676126036
+  },
+  {
+    "asset": "ADA",
+    "rvol": 2.62043184662476,
+    "current12hVolumeUsd": 4897973.85869,
+    "price": 0.28499,
+    "btcCorr": 0.7825639291655835,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676127189
+  },
+  {
+    "asset": "STX",
+    "rvol": 2.4619485394639726,
+    "current12hVolumeUsd": 340588.52176300006,
+    "price": 0.25858,
+    "btcCorr": 0.7304275937618298,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676115065
+  },
+  {
+    "asset": "ZK",
+    "rvol": 2.4294326145967027,
+    "current12hVolumeUsd": 203051.824136,
+    "price": 0.020231,
+    "btcCorr": 0.5459569361034357,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676153947
+  },
+  {
+    "asset": "FIL",
+    "rvol": 2.360310183908549,
+    "current12hVolumeUsd": 492506.486882,
+    "price": 0.93585,
+    "btcCorr": 0.5481825021874123,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676132351
+  },
+  {
+    "asset": "XMR",
+    "rvol": 2.3332697572838605,
+    "current12hVolumeUsd": 3292621.3067400004,
+    "price": 365.89,
+    "btcCorr": 0.19336312921100668,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676188011
+  },
+  {
+    "asset": "DOT",
+    "rvol": 2.3146273999451434,
+    "current12hVolumeUsd": 3020458.68092,
+    "price": 1.5902,
+    "btcCorr": 0.5436003639777274,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676122814
+  },
+  {
+    "asset": "ETHFI",
+    "rvol": 2.2768318176977704,
+    "current12hVolumeUsd": 533347.803447,
+    "price": 0.58046,
+    "btcCorr": 0.4530079270666805,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676148183
+  },
+  {
+    "asset": "KAS",
+    "rvol": 2.2609246743253846,
+    "current12hVolumeUsd": 171438.24525200002,
+    "price": 0.03319,
+    "btcCorr": 0.41173727197618126,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676125445
+  },
+  {
+    "asset": "ONDO",
+    "rvol": 2.250709030131362,
+    "current12hVolumeUsd": 553113.10188,
+    "price": 0.281,
+    "btcCorr": 0.8486852224462134,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676143001
+  },
+  {
+    "asset": "MON",
+    "rvol": 2.2122330629821274,
+    "current12hVolumeUsd": 2486723.7734139995,
+    "price": 0.02399,
+    "btcCorr": 0.5127993357619912,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676184227
+  },
+  {
+    "asset": "LDO",
+    "rvol": 2.207749144341006,
+    "current12hVolumeUsd": 707331.4608649999,
+    "price": 0.32249,
+    "btcCorr": 0.7328595002173789,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676114273
+  },
+  {
+    "asset": "ARK",
+    "rvol": 2.171489571368948,
+    "current12hVolumeUsd": 76736.07968000001,
+    "price": 0.18562,
+    "btcCorr": 0.309874956500757,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676124517
+  },
+  {
+    "asset": "ARB",
+    "rvol": 2.1003421113301477,
+    "current12hVolumeUsd": 1340783.0705400002,
+    "price": 0.10763,
+    "btcCorr": 0.6925769030946279,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676111896
+  },
+  {
+    "asset": "S",
+    "rvol": 2.071928520785099,
+    "current12hVolumeUsd": 404950.285805,
+    "price": 0.050115,
+    "btcCorr": 0.5190871132380147,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676166737
+  },
+  {
+    "asset": "BRETT",
+    "rvol": 2.058873305157252,
+    "current12hVolumeUsd": 320838.436392,
+    "price": 0.00808,
+    "btcCorr": 0.558147319717946,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676153182
+  },
+  {
+    "asset": "MANTA",
+    "rvol": 2.03961268340293,
+    "current12hVolumeUsd": 113096.20086999999,
+    "price": 0.07185,
+    "btcCorr": 0.10638993421267773,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676142127
+  },
+  {
+    "asset": "SKY",
+    "rvol": 2.0170646136614643,
+    "current12hVolumeUsd": 1060948.304006,
+    "price": 0.074929,
+    "btcCorr": 0.38079692783670394,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676179950
+  },
+  {
+    "asset": "STRK",
+    "rvol": 2.0103207559824967,
+    "current12hVolumeUsd": 651144.4591969999,
+    "price": 0.04019,
+    "btcCorr": 0.5332384794344723,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676146192
+  },
+  {
+    "asset": "kBONK",
+    "rvol": 2.0098089001728074,
+    "current12hVolumeUsd": 2232802.310273,
+    "price": 0.006512,
+    "btcCorr": 0.5661395397489893,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676133872
+  },
+  {
+    "asset": "UNI",
+    "rvol": 1.9724046562872162,
+    "current12hVolumeUsd": 1837740.6083,
+    "price": 4.1194,
+    "btcCorr": 0.7043022252079567,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676121266
+  },
+  {
+    "asset": "ETC",
+    "rvol": 1.9370227708693752,
+    "current12hVolumeUsd": 632261.246369,
+    "price": 8.9316,
+    "btcCorr": 0.7333442928947043,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676141168
+  },
+  {
+    "asset": "APT",
+    "rvol": 1.9258418799117394,
+    "current12hVolumeUsd": 1464704.166161,
+    "price": 1.0094,
+    "btcCorr": 0.5064432132706433,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676117543
+  },
+  {
+    "asset": "GOAT",
+    "rvol": 1.912140868285539,
+    "current12hVolumeUsd": 72011.69901099999,
+    "price": 0.019142,
+    "btcCorr": 0.3946804200085425,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676157790
+  },
+  {
+    "asset": "PROVE",
+    "rvol": 1.87282782312705,
+    "current12hVolumeUsd": 47701.66977,
+    "price": 0.27672,
+    "btcCorr": 0.36461610090986385,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676177581
+  },
+  {
+    "asset": "NEO",
+    "rvol": 1.8718318885615837,
+    "current12hVolumeUsd": 414447.438789,
+    "price": 2.7986,
+    "btcCorr": 0.17072914193966274,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676131300
+  },
+  {
+    "asset": "APE",
+    "rvol": 1.8687374133481789,
+    "current12hVolumeUsd": 79920.39592699998,
+    "price": 0.10164,
+    "btcCorr": 0.6137211213225362,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676110731
+  },
+  {
+    "asset": "BNB",
+    "rvol": 1.8591402233758367,
+    "current12hVolumeUsd": 5002461.86148,
+    "price": 680.47,
+    "btcCorr": 0.8600212546538226,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676109986
+  },
+  {
+    "asset": "PEOPLE",
+    "rvol": 1.8023197368934152,
+    "current12hVolumeUsd": 47701.716029999996,
+    "price": 0.007536,
+    "btcCorr": 0.23839760053544565,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676139448
+  },
+  {
+    "asset": "BIO",
+    "rvol": 1.7973815876931736,
+    "current12hVolumeUsd": 79463.58865,
+    "price": 0.021936,
+    "btcCorr": 0.42755360707799545,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676165406
+  },
+  {
+    "asset": "ZEC",
+    "rvol": 1.7901273916868568,
+    "current12hVolumeUsd": 20774514.5425,
+    "price": 231.33,
+    "btcCorr": 0.5511962049576828,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676183817
+  },
+  {
+    "asset": "AVAX",
+    "rvol": 1.7799128436835205,
+    "current12hVolumeUsd": 3693748.19717,
+    "price": 10.195,
+    "btcCorr": 0.8072219802668349,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676109558
+  },
+  {
+    "asset": "CHILLGUY",
+    "rvol": 1.7733130706920426,
+    "current12hVolumeUsd": 83248.498668,
+    "price": 0.010128,
+    "btcCorr": 0.4672912556474268,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676160137
+  },
+  {
+    "asset": "EIGEN",
+    "rvol": 1.7730291634699646,
+    "current12hVolumeUsd": 686828.787767,
+    "price": 0.2186,
+    "btcCorr": 0.3488272234983158,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676151552
+  },
+  {
+    "asset": "MOVE",
+    "rvol": 1.7694166422919098,
+    "current12hVolumeUsd": 113235.219416,
+    "price": 0.021779,
+    "btcCorr": 0.4540411156742291,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676162779
+  },
+  {
+    "asset": "ATOM",
+    "rvol": 1.7662460278903662,
+    "current12hVolumeUsd": 365084.84538899997,
+    "price": 1.9096,
+    "btcCorr": 0.45514177610390677,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676108165
+  },
+  {
+    "asset": "ETH",
+    "rvol": 1.748925831264942,
+    "current12hVolumeUsd": 754475060.31429,
+    "price": 2287.4,
+    "btcCorr": 0.9147971553569579,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676107768
+  },
+  {
+    "asset": "TRX",
+    "rvol": 1.7473066200047194,
+    "current12hVolumeUsd": 1433413.93866,
+    "price": 0.2981,
+    "btcCorr": 0.09903308648083056,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676119645
+  },
+  {
+    "asset": "LINK",
+    "rvol": 1.660902250427219,
+    "current12hVolumeUsd": 6230645.45322,
+    "price": 9.7399,
+    "btcCorr": 0.9160024892725553,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676114654
+  },
+  {
+    "asset": "DYDX",
+    "rvol": 1.6600560029506046,
+    "current12hVolumeUsd": 138494.4718,
+    "price": 0.09195,
+    "btcCorr": 0.5841084510181112,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676108556
+  },
+  {
+    "asset": "DOGE",
+    "rvol": 1.6536368773369103,
+    "current12hVolumeUsd": 10860454.273222,
+    "price": 0.10037,
+    "btcCorr": 0.7230617336784152,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676112316
+  },
+  {
+    "asset": "SAND",
+    "rvol": 1.6006143649384765,
+    "current12hVolumeUsd": 97326.034202,
+    "price": 0.087125,
+    "btcCorr": 0.7331184066206299,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676160673
+  },
+  {
+    "asset": "TRB",
+    "rvol": 1.5924137323720535,
+    "current12hVolumeUsd": 66538.14356,
+    "price": 16.764,
+    "btcCorr": 0.400448509747694,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676123712
+  },
+  {
+    "asset": "SPX",
+    "rvol": 1.5746369575762573,
+    "current12hVolumeUsd": 960395.508668,
+    "price": 0.33199,
+    "btcCorr": 0.7425757240678186,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676166194
+  },
+  {
+    "asset": "HYPE",
+    "rvol": 1.5652026380978745,
+    "current12hVolumeUsd": 186799355.84987998,
+    "price": 39.199,
+    "btcCorr": 0.32849136992010886,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676161869
+  },
+  {
+    "asset": "AERO",
+    "rvol": 1.55914373898456,
+    "current12hVolumeUsd": 249476.77702999994,
+    "price": 0.34974,
+    "btcCorr": 0.8039243022100583,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676186704
+  },
+  {
+    "asset": "SOL",
+    "rvol": 1.554646709094765,
+    "current12hVolumeUsd": 171284944.38538998,
+    "price": 93.599,
+    "btcCorr": 0.8587321168735774,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676108950
+  },
+  {
+    "asset": "NOT",
+    "rvol": 1.5189533829867945,
+    "current12hVolumeUsd": 14412.209907,
+    "price": 0.000426,
+    "btcCorr": 0.34057317538025966,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676152406
+  },
+  {
+    "asset": "AZTEC",
+    "rvol": 1.4912778022274242,
+    "current12hVolumeUsd": 224051.34511300002,
+    "price": 0.025781,
+    "btcCorr": 0.5270143146588295,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676190399
+  },
+  {
+    "asset": "AAVE",
+    "rvol": 1.4892363307695418,
+    "current12hVolumeUsd": 3962863.5596000003,
+    "price": 120.93,
+    "btcCorr": 0.8150274775560965,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676117922
+  },
+  {
+    "asset": "ASTER",
+    "rvol": 1.48320520608401,
+    "current12hVolumeUsd": 4348548.9872,
+    "price": 0.72332,
+    "btcCorr": 0.473262760460937,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676180388
+  },
+  {
+    "asset": "GAS",
+    "rvol": 1.4819900993836344,
+    "current12hVolumeUsd": 99315.67542000001,
+    "price": 1.659,
+    "btcCorr": 0.2886546170189791,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676128748
+  },
+  {
+    "asset": "POL",
+    "rvol": 1.4615512312356136,
+    "current12hVolumeUsd": 563450.8372529999,
+    "price": 0.10047,
+    "btcCorr": 0.635523230514884,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676155691
+  },
+  {
+    "asset": "ENA",
+    "rvol": 1.4597867897891221,
+    "current12hVolumeUsd": 2121187.56576,
+    "price": 0.11648,
+    "btcCorr": 0.6723033804372885,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676148567
+  },
+  {
+    "asset": "GMT",
+    "rvol": 1.4487125169117587,
+    "current12hVolumeUsd": 40238.617917999996,
+    "price": 0.011622,
+    "btcCorr": 0.5538425089169184,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676134261
+  },
+  {
+    "asset": "BCH",
+    "rvol": 1.4468303897577988,
+    "current12hVolumeUsd": 3538853.9557600003,
+    "price": 477.43,
+    "btcCorr": 0.7266212909300359,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676117159
+  },
+  {
+    "asset": "PNUT",
+    "rvol": 1.4118061138599358,
+    "current12hVolumeUsd": 178991.63354100002,
+    "price": 0.04951,
+    "btcCorr": 0.46753594835190987,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676159372
+  },
+  {
+    "asset": "DOOD",
+    "rvol": 1.4105191786775804,
+    "current12hVolumeUsd": 360322.899813,
+    "price": 0.003373,
+    "btcCorr": 0.12501380844936405,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676174819
+  },
+  {
+    "asset": "ZRO",
+    "rvol": 1.3750443864411395,
+    "current12hVolumeUsd": 3112968.55197,
+    "price": 2.2028,
+    "btcCorr": 0.30824879131968713,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676122434
+  },
+  {
+    "asset": "STABLE",
+    "rvol": 1.3654101250177393,
+    "current12hVolumeUsd": 616060.238271,
+    "price": 0.027406,
+    "btcCorr": -0.03439685965353909,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676186938
+  },
+  {
+    "asset": "ALT",
+    "rvol": 1.362950558806603,
+    "current12hVolumeUsd": 142829.536686,
+    "price": 0.00789,
+    "btcCorr": 0.2772038923656427,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676143388
+  },
+  {
+    "asset": "MNT",
+    "rvol": 1.3473505060370168,
+    "current12hVolumeUsd": 481005.051079,
+    "price": 0.83746,
+    "btcCorr": 0.24301896504174056,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676148954
+  },
+  {
+    "asset": "NEAR",
+    "rvol": 1.344168701478304,
+    "current12hVolumeUsd": 3436527.5449300003,
+    "price": 1.4293,
+    "btcCorr": 0.5042265337364848,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676129755
+  },
+  {
+    "asset": "PENGU",
+    "rvol": 1.341421747235565,
+    "current12hVolumeUsd": 1083343.526143,
+    "price": 0.007908,
+    "btcCorr": 0.640346193398262,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676163248
+  },
+  {
+    "asset": "MET",
+    "rvol": 1.3385002265959878,
+    "current12hVolumeUsd": 208397.75319000002,
+    "price": 0.16712,
+    "btcCorr": 0.5124207763006157,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676184607
+  },
+  {
+    "asset": "MEGA",
+    "rvol": 1.3384527739274632,
+    "current12hVolumeUsd": 45460.06059,
+    "price": 0.14106,
+    "btcCorr": 0.007803101338528693,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676184990
+  },
+  {
+    "asset": "kLUNC",
+    "rvol": 1.3329487020365316,
+    "current12hVolumeUsd": 51938.19100199999,
+    "price": 0.042163,
+    "btcCorr": 0.34911214420401254,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676136051
+  },
+  {
+    "asset": "SUSHI",
+    "rvol": 1.318836118265318,
+    "current12hVolumeUsd": 64197.78227899999,
+    "price": 0.2192,
+    "btcCorr": 0.6584150107421622,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676132973
+  },
+  {
+    "asset": "LINEA",
+    "rvol": 1.3140488176839593,
+    "current12hVolumeUsd": 114832.356923,
+    "price": 0.00349,
+    "btcCorr": 0.43704938639092006,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676179570
+  },
+  {
+    "asset": "PUMP",
+    "rvol": 1.3122230012414422,
+    "current12hVolumeUsd": 8653620.990107,
+    "price": 0.002083,
+    "btcCorr": 0.5846330146816686,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676177174
+  },
+  {
+    "asset": "XRP",
+    "rvol": 1.3108211513844406,
+    "current12hVolumeUsd": 27602974.314600002,
+    "price": 1.4818,
+    "btcCorr": 0.8254067195022405,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676116745
+  },
+  {
+    "asset": "FTT",
+    "rvol": 1.2853588784611976,
+    "current12hVolumeUsd": 8789.820517000002,
+    "price": 0.29181,
+    "btcCorr": 0.4003444182639948,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676124129
+  },
+  {
+    "asset": "TST",
+    "rvol": 1.2801984533951327,
+    "current12hVolumeUsd": 29640.305919000002,
+    "price": 0.010371,
+    "btcCorr": 0.4067069779171955,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676170068
+  },
+  {
+    "asset": "USTC",
+    "rvol": 1.275772902005501,
+    "current12hVolumeUsd": 11069.727876999998,
+    "price": 0.005054,
+    "btcCorr": 0.40810234506791393,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676135128
+  },
+  {
+    "asset": "SEI",
+    "rvol": 1.2757220885634317,
+    "current12hVolumeUsd": 934570.488943,
+    "price": 0.068735,
+    "btcCorr": 0.5350998818965439,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676121654
+  },
+  {
+    "asset": "JUP",
+    "rvol": 1.2640001807735495,
+    "current12hVolumeUsd": 749105.6363399999,
+    "price": 0.16919,
+    "btcCorr": 0.7362287543851542,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676135520
+  },
+  {
+    "asset": "TAO",
+    "rvol": 1.2626648250953705,
+    "current12hVolumeUsd": 19047621.211200003,
+    "price": 297.19,
+    "btcCorr": 0.2824675199006222,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676146453
+  },
+  {
+    "asset": "PENDLE",
+    "rvol": 1.2626191772547728,
+    "current12hVolumeUsd": 339074.14530000003,
+    "price": 1.3468,
+    "btcCorr": 0.5483499886598489,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676129282
+  },
+  {
+    "asset": "DASH",
+    "rvol": 1.220326420750741,
+    "current12hVolumeUsd": 136174.17203000002,
+    "price": 34.405,
+    "btcCorr": 0.6348698691189748,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676189257
+  },
+  {
+    "asset": "VINE",
+    "rvol": 1.2113072186139964,
+    "current12hVolumeUsd": 123708.17618100002,
+    "price": 0.018363,
+    "btcCorr": 0.32313326460650643,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676168910
+  },
+  {
+    "asset": "GALA",
+    "rvol": 1.2102811834783216,
+    "current12hVolumeUsd": 54891.677712000004,
+    "price": 0.003586,
+    "btcCorr": 0.5657488342700787,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676137018
+  },
+  {
+    "asset": "CC",
+    "rvol": 1.2085885698359107,
+    "current12hVolumeUsd": 248618.91771,
+    "price": 0.15344,
+    "btcCorr": 0.2355867065232866,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676185376
+  },
+  {
+    "asset": "CRV",
+    "rvol": 1.2052312959541005,
+    "current12hVolumeUsd": 2710793.3624020005,
+    "price": 0.24854,
+    "btcCorr": 0.6544013838458411,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676113880
+  },
+  {
+    "asset": "DYM",
+    "rvol": 1.204892704239563,
+    "current12hVolumeUsd": 78351.18844700001,
+    "price": 0.03682,
+    "btcCorr": 0.04735187224858549,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676144156
+  },
+  {
+    "asset": "BIGTIME",
+    "rvol": 1.1803252668304232,
+    "current12hVolumeUsd": 77596.444753,
+    "price": 0.014216,
+    "btcCorr": 0.47903668924266796,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676124909
+  },
+  {
+    "asset": "LTC",
+    "rvol": 1.1761621865429366,
+    "current12hVolumeUsd": 1202112.14647,
+    "price": 57.925,
+    "btcCorr": 0.8320956233706939,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676111503
+  },
+  {
+    "asset": "AR",
+    "rvol": 1.175403637755133,
+    "current12hVolumeUsd": 393057.53049100004,
+    "price": 1.8973,
+    "btcCorr": 0.3610856268750158,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676146846
+  },
+  {
+    "asset": "LIT",
+    "rvol": 1.1626444524996105,
+    "current12hVolumeUsd": 3381901.3368,
+    "price": 1.1022,
+    "btcCorr": 0.34474238648704364,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676187621
+  },
+  {
+    "asset": "KAITO",
+    "rvol": 1.1581294909108781,
+    "current12hVolumeUsd": 101874.72554000001,
+    "price": 0.36856,
+    "btcCorr": 0.1994666820242622,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676171486
+  },
+  {
+    "asset": "GRASS",
+    "rvol": 1.1509318644693376,
+    "current12hVolumeUsd": 578209.393474,
+    "price": 0.379,
+    "btcCorr": -0.004756275684072045,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676158577
+  },
+  {
+    "asset": "MOODENG",
+    "rvol": 1.145639358955295,
+    "current12hVolumeUsd": 355616.5944889999,
+    "price": 0.056313,
+    "btcCorr": 0.31898420662537025,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676158193
+  },
+  {
+    "asset": "ENS",
+    "rvol": 1.1115496986092892,
+    "current12hVolumeUsd": 44460.817774999996,
+    "price": 6.4709,
+    "btcCorr": 0.7812325879053783,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676139837
+  },
+  {
+    "asset": "IO",
+    "rvol": 1.1110109563840882,
+    "current12hVolumeUsd": 123053.75609799998,
+    "price": 0.12069,
+    "btcCorr": 0.41661560679603193,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676153559
+  },
+  {
+    "asset": "MEME",
+    "rvol": 1.0992722066046552,
+    "current12hVolumeUsd": 148045.29060799998,
+    "price": 0.000616,
+    "btcCorr": 0.33077179140809343,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676130211
+  },
+  {
+    "asset": "MAVIA",
+    "rvol": 1.0976619691279614,
+    "current12hVolumeUsd": 11881.550834,
+    "price": 0.03496,
+    "btcCorr": 0.20550551441063727,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676144557
+  },
+  {
+    "asset": "ZEN",
+    "rvol": 1.0919575387458742,
+    "current12hVolumeUsd": 172111.171691,
+    "price": 6.3169,
+    "btcCorr": 0.5119082799030594,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676131915
+  },
+  {
+    "asset": "kSHIB",
+    "rvol": 1.0912799653877754,
+    "current12hVolumeUsd": 1125670.7209129997,
+    "price": 0.006112,
+    "btcCorr": 0.4890580206723079,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676120035
+  },
+  {
+    "asset": "ORDI",
+    "rvol": 1.0823643629198445,
+    "current12hVolumeUsd": 47285.868117,
+    "price": 2.6963,
+    "btcCorr": 0.4054192738939615,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676130592
+  },
+  {
+    "asset": "CAKE",
+    "rvol": 1.0715285155173078,
+    "current12hVolumeUsd": 193181.31190000003,
+    "price": 1.5074,
+    "btcCorr": 0.4289602484013782,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676139192
+  },
+  {
+    "asset": "BTC",
+    "rvol": 1.067056614098341,
+    "current12hVolumeUsd": 1243258889.8772302,
+    "price": 74074,
+    "btcCorr": 1,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676107378
+  },
+  {
+    "asset": "PROMPT",
+    "rvol": 1.0643799826624247,
+    "current12hVolumeUsd": 46510.082409,
+    "price": 0.043581,
+    "btcCorr": 0.12399707818052706,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676172507
+  },
+  {
+    "asset": "RUNE",
+    "rvol": 1.0565777901981401,
+    "current12hVolumeUsd": 71273.82500699999,
+    "price": 0.45433,
+    "btcCorr": 0.8769650958356662,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676122052
+  },
+  {
+    "asset": "ACE",
+    "rvol": 1.0512284737886373,
+    "current12hVolumeUsd": 58340.748867,
+    "price": 0.1496,
+    "btcCorr": 0.2890186278989327,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676137864
+  },
+  {
+    "asset": "HBAR",
+    "rvol": 1.039321843030719,
+    "current12hVolumeUsd": 431144.200633,
+    "price": 0.098632,
+    "btcCorr": 0.7436919948464435,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676150505
+  },
+  {
+    "asset": "ZETA",
+    "rvol": 1.028503485148201,
+    "current12hVolumeUsd": 42406.821063999996,
+    "price": 0.05224,
+    "btcCorr": 0.5985751378066719,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676143780
+  },
+  {
+    "asset": "IMX",
+    "rvol": 1.0248089046599644,
+    "current12hVolumeUsd": 79688.589802,
+    "price": 0.17307,
+    "btcCorr": 0.4517757186557496,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676133478
+  },
+  {
+    "asset": "RSR",
+    "rvol": 1.022408905360502,
+    "current12hVolumeUsd": 28283.91976,
+    "price": 0.001786,
+    "btcCorr": 0.48679350716164277,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676136481
+  },
+  {
+    "asset": "NXPC",
+    "rvol": 0.9937533777888741,
+    "current12hVolumeUsd": 64661.20529,
+    "price": 0.29133,
+    "btcCorr": 0.26755615165952645,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676175215
+  },
+  {
+    "asset": "SNX",
+    "rvol": 0.993138960708735,
+    "current12hVolumeUsd": 75950.59150200001,
+    "price": 0.32251,
+    "btcCorr": 0.40598432008569607,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676116357
+  },
+  {
+    "asset": "PAXG",
+    "rvol": 0.9916470977744128,
+    "current12hVolumeUsd": 5578956.2143,
+    "price": 5021.2,
+    "btcCorr": 0.37313985143237427,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676172246
+  },
+  {
+    "asset": "POPCAT",
+    "rvol": 0.9886501816115354,
+    "current12hVolumeUsd": 426772.292707,
+    "price": 0.057369,
+    "btcCorr": 0.5556855544882043,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676151164
+  },
+  {
+    "asset": "ALGO",
+    "rvol": 0.9751281705262996,
+    "current12hVolumeUsd": 153925.64888500003,
+    "price": 0.095025,
+    "btcCorr": 0.6363898850777113,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676161489
+  },
+  {
+    "asset": "COMP",
+    "rvol": 0.9640731880230913,
+    "current12hVolumeUsd": 104855.65590000001,
+    "price": 19.341,
+    "btcCorr": 0.2727716653799795,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676118322
+  },
+  {
+    "asset": "XLM",
+    "rvol": 0.9591173085316338,
+    "current12hVolumeUsd": 518457.32814999996,
+    "price": 0.1729,
+    "btcCorr": 0.7019023099976348,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676159763
+  },
+  {
+    "asset": "JTO",
+    "rvol": 0.9494318170013429,
+    "current12hVolumeUsd": 118791.16114999997,
+    "price": 0.2921,
+    "btcCorr": 0.5894140932771811,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676137477
+  },
+  {
+    "asset": "XPL",
+    "rvol": 0.9454628231371852,
+    "current12hVolumeUsd": 5132671.85315,
+    "price": 0.1129,
+    "btcCorr": 0.5068089079844792,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676178653
+  },
+  {
+    "asset": "INIT",
+    "rvol": 0.9363390432507144,
+    "current12hVolumeUsd": 252200.94845600004,
+    "price": 0.090207,
+    "btcCorr": -0.07389034710952062,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676174437
+  },
+  {
+    "asset": "BABY",
+    "rvol": 0.9264075476328151,
+    "current12hVolumeUsd": 162745.243782,
+    "price": 0.013981,
+    "btcCorr": 0.22700358408742413,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676172894
+  },
+  {
+    "asset": "GMX",
+    "rvol": 0.924695897045313,
+    "current12hVolumeUsd": 75958.70829,
+    "price": 6.7213,
+    "btcCorr": 0.4500823714201403,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676115977
+  },
+  {
+    "asset": "kNEIRO",
+    "rvol": 0.921773365267742,
+    "current12hVolumeUsd": 58599.59482200001,
+    "price": 0.0747,
+    "btcCorr": 0.4216660378286503,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676157414
+  },
+  {
+    "asset": "APEX",
+    "rvol": 0.9213224156925245,
+    "current12hVolumeUsd": 138576.19756,
+    "price": 0.28903,
+    "btcCorr": 0.2971081799796513,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676182992
+  },
+  {
+    "asset": "IOTA",
+    "rvol": 0.9103581088992179,
+    "current12hVolumeUsd": 9833.324414000002,
+    "price": 0.065632,
+    "btcCorr": 0.53459465918698,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676161069
+  },
+  {
+    "asset": "YZY",
+    "rvol": 0.9092439302506486,
+    "current12hVolumeUsd": 59222.80029,
+    "price": 0.3255,
+    "btcCorr": 0.16542015463461648,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676178275
+  },
+  {
+    "asset": "LAYER",
+    "rvol": 0.899209836147181,
+    "current12hVolumeUsd": 45162.500719,
+    "price": 0.085667,
+    "btcCorr": 0.45824730782059664,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676170489
+  },
+  {
+    "asset": "VIRTUAL",
+    "rvol": 0.8895492109586959,
+    "current12hVolumeUsd": 1079272.4773869999,
+    "price": 0.76719,
+    "btcCorr": 0.7168443605368527,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676163011
+  },
+  {
+    "asset": "MERL",
+    "rvol": 0.8825666445118672,
+    "current12hVolumeUsd": 90082.035212,
+    "price": 0.038573,
+    "btcCorr": 0.3266903696871095,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676150119
+  },
+  {
+    "asset": "USUAL",
+    "rvol": 0.8806156494656739,
+    "current12hVolumeUsd": 26016.780788000004,
+    "price": 0.01417,
+    "btcCorr": 0.414832743684636,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676163717
+  },
+  {
+    "asset": "W",
+    "rvol": 0.8761063929343678,
+    "current12hVolumeUsd": 119683.903735,
+    "price": 0.01763,
+    "btcCorr": 0.3377554478705685,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676144961
+  },
+  {
+    "asset": "ZORA",
+    "rvol": 0.8655013131809333,
+    "current12hVolumeUsd": 82374.431533,
+    "price": 0.017566,
+    "btcCorr": 0.5475179712233524,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676174057
+  },
+  {
+    "asset": "POLYX",
+    "rvol": 0.8504658209453512,
+    "current12hVolumeUsd": 11491.362421000002,
+    "price": 0.041441,
+    "btcCorr": 0.4947292284845813,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676128366
+  },
+  {
+    "asset": "YGG",
+    "rvol": 0.8363096595241006,
+    "current12hVolumeUsd": 106679.73703300001,
+    "price": 0.041034,
+    "btcCorr": 0.23097403008391315,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676119250
+  },
+  {
+    "asset": "OP",
+    "rvol": 0.8315063993913676,
+    "current12hVolumeUsd": 455085.35806800006,
+    "price": 0.13127,
+    "btcCorr": 0.5749448542836249,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676111131
+  },
+  {
+    "asset": "UMA",
+    "rvol": 0.8279419658231915,
+    "current12hVolumeUsd": 39511.91495400001,
+    "price": 0.45345,
+    "btcCorr": 0.2872124779705035,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676142543
+  },
+  {
+    "asset": "TNSR",
+    "rvol": 0.827053938549167,
+    "current12hVolumeUsd": 14084.913619,
+    "price": 0.04748,
+    "btcCorr": 0.1874158177411557,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676149185
+  },
+  {
+    "asset": "MORPHO",
+    "rvol": 0.8244911660531271,
+    "current12hVolumeUsd": 824469.8915500001,
+    "price": 1.8881,
+    "btcCorr": 0.4811740804617541,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676167131
+  },
+  {
+    "asset": "SYRUP",
+    "rvol": 0.8220095386895067,
+    "current12hVolumeUsd": 230776.58129,
+    "price": 0.26474,
+    "btcCorr": 0.38719649510372894,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676176763
+  },
+  {
+    "asset": "PYTH",
+    "rvol": 0.8052135594561611,
+    "current12hVolumeUsd": 126972.30056,
+    "price": 0.049804,
+    "btcCorr": 0.5896885076480906,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676132593
+  },
+  {
+    "asset": "TON",
+    "rvol": 0.8045352289058538,
+    "current12hVolumeUsd": 371188.75162,
+    "price": 1.3319,
+    "btcCorr": 0.34003725652795713,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676127574
+  },
+  {
+    "asset": "SKR",
+    "rvol": 0.7617151393179247,
+    "current12hVolumeUsd": 178028.253814,
+    "price": 0.024353,
+    "btcCorr": 0.4428478574872317,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676189742
+  },
+  {
+    "asset": "HYPER",
+    "rvol": 0.7567906739122319,
+    "current12hVolumeUsd": 24443.256719999998,
+    "price": 0.093445,
+    "btcCorr": 0.31376957973437913,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676173670
+  },
+  {
+    "asset": "STBL",
+    "rvol": 0.7438210792227391,
+    "current12hVolumeUsd": 65022.647750000004,
+    "price": 0.0365,
+    "btcCorr": 0.3104752388942351,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676181835
+  },
+  {
+    "asset": "BERA",
+    "rvol": 0.7374835811122982,
+    "current12hVolumeUsd": 678040.6509659999,
+    "price": 0.66657,
+    "btcCorr": 0.17258504191737883,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676169675
+  },
+  {
+    "asset": "MINA",
+    "rvol": 0.7066011669824125,
+    "current12hVolumeUsd": 42416.545317000004,
+    "price": 0.060157,
+    "btcCorr": 0.42254208589693903,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676127966
+  },
+  {
+    "asset": "0G",
+    "rvol": 0.7002520783023065,
+    "current12hVolumeUsd": 30934.14051,
+    "price": 0.58272,
+    "btcCorr": 0.44621161201684867,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676182221
+  },
+  {
+    "asset": "RENDER",
+    "rvol": 0.6722875249153288,
+    "current12hVolumeUsd": 778624.3172700001,
+    "price": 1.867,
+    "btcCorr": 0.49823162175438546,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676155158
+  },
+  {
+    "asset": "2Z",
+    "rvol": 0.6528904060420927,
+    "current12hVolumeUsd": 60808.990571,
+    "price": 0.083108,
+    "btcCorr": 0.18725650170614616,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676183434
+  },
+  {
+    "asset": "BSV",
+    "rvol": 0.6527970025993861,
+    "current12hVolumeUsd": 84641.17886,
+    "price": 15.295,
+    "btcCorr": 0.2569899867309976,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676126809
+  },
+  {
+    "asset": "ANIME",
+    "rvol": 0.6497797775744878,
+    "current12hVolumeUsd": 33760.064013,
+    "price": 0.004815,
+    "btcCorr": 0.48700786339851343,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676168397
+  },
+  {
+    "asset": "HEMI",
+    "rvol": 0.6351054689486859,
+    "current12hVolumeUsd": 66965.67771599999,
+    "price": 0.007892,
+    "btcCorr": 0.23379810070891557,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676182612
+  },
+  {
+    "asset": "SUPER",
+    "rvol": 0.6350973958724868,
+    "current12hVolumeUsd": 25517.00303,
+    "price": 0.1217,
+    "btcCorr": 0.5601464801888477,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676134722
+  },
+  {
+    "asset": "TIA",
+    "rvol": 0.6325995906146912,
+    "current12hVolumeUsd": 391567.87194800004,
+    "price": 0.36816,
+    "btcCorr": 0.5567425590383935,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676126422
+  },
+  {
+    "asset": "AIXBT",
+    "rvol": 0.6267151975830164,
+    "current12hVolumeUsd": 163627.098329,
+    "price": 0.026802,
+    "btcCorr": 0.2781568284134822,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676164574
+  },
+  {
+    "asset": "WLFI",
+    "rvol": 0.6254974114859704,
+    "current12hVolumeUsd": 771620.8276,
+    "price": 0.10504,
+    "btcCorr": 0.6861528075921843,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676179188
+  },
+  {
+    "asset": "FOGO",
+    "rvol": 0.5915947836464619,
+    "current12hVolumeUsd": 50799.746703,
+    "price": 0.024055,
+    "btcCorr": 0.28400967486096895,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676187367
+  },
+  {
+    "asset": "MEW",
+    "rvol": 0.5818030851779423,
+    "current12hVolumeUsd": 27579.429997,
+    "price": 0.000685,
+    "btcCorr": 0.5490773407455513,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676154745
+  },
+  {
+    "asset": "BANANA",
+    "rvol": 0.5770501369979136,
+    "current12hVolumeUsd": 36610.47997,
+    "price": 4.2238,
+    "btcCorr": 0.23348654736609742,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676123197
+  },
+  {
+    "asset": "TRUMP",
+    "rvol": 0.5491268293822384,
+    "current12hVolumeUsd": 11008677.015769996,
+    "price": 3.8183,
+    "btcCorr": 0.28757966768553267,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676167752
+  },
+  {
+    "asset": "SCR",
+    "rvol": 0.5490281317695554,
+    "current12hVolumeUsd": 39610.85651,
+    "price": 0.04645,
+    "btcCorr": 0.049755947027509566,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676157022
+  },
+  {
+    "asset": "ICP",
+    "rvol": 0.5475501267659396,
+    "current12hVolumeUsd": 516110.51226,
+    "price": 2.6953,
+    "btcCorr": 0.19770439606493764,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676185777
+  },
+  {
+    "asset": "IP",
+    "rvol": 0.5379627749853197,
+    "current12hVolumeUsd": 198961.77092899996,
+    "price": 0.79313,
+    "btcCorr": 0.33719214421793275,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676170978
+  },
+  {
+    "asset": "RESOLV",
+    "rvol": 0.5288158793917321,
+    "current12hVolumeUsd": 1069683.356296,
+    "price": 0.064855,
+    "btcCorr": -0.0015245778305909472,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676176357
+  },
+  {
+    "asset": "SOPH",
+    "rvol": 0.5144171984515317,
+    "current12hVolumeUsd": 39771.01324200001,
+    "price": 0.008899,
+    "btcCorr": 0.3891719587372108,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676175682
+  },
+  {
+    "asset": "VVV",
+    "rvol": 0.4963755857823292,
+    "current12hVolumeUsd": 1876906.645034,
+    "price": 6.2536,
+    "btcCorr": 0.29588100002082535,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676169290
+  },
+  {
+    "asset": "SAGA",
+    "rvol": 0.4773897859829789,
+    "current12hVolumeUsd": 25019.379736,
+    "price": 0.03428,
+    "btcCorr": 0.11309047343282848,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676149718
+  },
+  {
+    "asset": "HMSTR",
+    "rvol": 0.4383911353434842,
+    "current12hVolumeUsd": 3710.3644239999994,
+    "price": 0.000167,
+    "btcCorr": 0.41603171044057935,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676156630
+  },
+  {
+    "asset": "PURR",
+    "rvol": 0.3621537398443205,
+    "current12hVolumeUsd": 158132.249122,
+    "price": 0.097076,
+    "btcCorr": 0.31519160961228826,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676158976
+  },
+  {
+    "asset": "MAV",
+    "rvol": 0.35817715755278556,
+    "current12hVolumeUsd": 30552.044256,
+    "price": 0.015077,
+    "btcCorr": 0.1251561478415639,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676138403
+  },
+  {
+    "asset": "GRIFFAIN",
+    "rvol": 0.3396228327571202,
+    "current12hVolumeUsd": 89526.38216099999,
+    "price": 0.00974,
+    "btcCorr": 0.2696638103774951,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676165805
+  },
+  {
+    "asset": "WCT",
+    "rvol": 0.3146812633270507,
+    "current12hVolumeUsd": 19536.988608000003,
+    "price": 0.05976,
+    "btcCorr": 0.2327962324841499,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676173278
+  },
+  {
+    "asset": "AVNT",
+    "rvol": 0.30731192678261277,
+    "current12hVolumeUsd": 386164.92264999996,
+    "price": 0.16173,
+    "btcCorr": 0.20800292530172307,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676181444
+  },
+  {
+    "asset": "MELANIA",
+    "rvol": 0.2944801836322216,
+    "current12hVolumeUsd": 119316.74199899998,
+    "price": 0.11924,
+    "btcCorr": 0.33335618623093205,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676167993
+  },
+  {
+    "asset": "TURBO",
+    "rvol": 0.28499549718339395,
+    "current12hVolumeUsd": 219224.441009,
+    "price": 0.001124,
+    "btcCorr": 0.1640868080366835,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676152787
+  },
+  {
+    "asset": "ZEREBRO",
+    "rvol": 0.27490919127105207,
+    "current12hVolumeUsd": 55400.714589,
+    "price": 0.008125,
+    "btcCorr": 0.2122666825056413,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676164966
+  },
+  {
+    "asset": "AXS",
+    "rvol": 0.15812199078591302,
+    "current12hVolumeUsd": 96037.76574,
+    "price": 1.2262,
+    "btcCorr": 0.419315244690178,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676188870
+  },
+  {
+    "asset": "XAI",
+    "rvol": 0.06470404526382423,
+    "current12hVolumeUsd": 18114.949625999998,
+    "price": 0.01073,
+    "btcCorr": 0.19852406550060167,
+    "runDate": "2026-03-16",
+    "runTimestamp": 1773676141681
+  }
+]
