@@ -96,10 +96,7 @@ function createWsConnection(coins) {
   const coinsToUse = coins.slice(0, MAX_COINS_TO_SUBSCRIBE);
   console.log('Subscribing to coins:', coinsToUse.join(', '));
 
-  const state = {
-    books: new Map(), // coin -> { bids: [[px, qty], ...], asks: [[px, qty], ...] }
-    trades: new Map(), // coin -> [{ side, px, sz, ts }, ...]
-  };
+  const state = createEmptyState();
 
   const ws = new WebSocket(WS_URL);
   let debugMsgCount = 0;
@@ -154,8 +151,16 @@ function createWsConnection(coins) {
 
   // Periodically print current metrics
   setInterval(() => {
-    printLiveMetrics(state);
+    const rows = buildLiveRows(state);
+    printLiveMetricsFromRows(rows);
   }, 5000);
+}
+
+function createEmptyState() {
+  return {
+    books: new Map(), // coin -> { bids: [[px, qty], ...], asks: [[px, qty], ...] }
+    trades: new Map(), // coin -> [{ side, px, sz, ts }, ...]
+  };
 }
 
 function handleChannelMessage(state, msg) {
@@ -315,10 +320,7 @@ function computeTradeDelta(trades) {
   return { buyNotional, sellNotional, delta, imbalancePct };
 }
 
-function printLiveMetrics(state) {
-  const now = new Date().toISOString();
-  console.log(`\n=== Live monitor @ ${now} ===`);
-
+function buildLiveRows(state) {
   const rows = [];
 
   for (const [coin, book] of state.books.entries()) {
@@ -354,12 +356,19 @@ function printLiveMetrics(state) {
     });
   }
 
-  if (rows.length === 0) {
+  rows.sort((a, b) => b.score - a.score);
+
+  return rows;
+}
+
+function printLiveMetricsFromRows(rows) {
+  const now = new Date().toISOString();
+  console.log(`\n=== Live monitor @ ${now} ===`);
+
+  if (!rows || rows.length === 0) {
     console.log('No book data yet.');
     return;
   }
-
-  rows.sort((a, b) => b.score - a.score);
 
   console.table(
     rows.map((r) => ({
@@ -403,5 +412,8 @@ module.exports = {
   getLatestReportAssets,
   computeSpreadAndDepth,
   computeTradeDelta,
+  createEmptyState,
+  handleChannelMessage,
+  buildLiveRows,
 };
 
