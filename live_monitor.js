@@ -12,8 +12,6 @@ const WS_URL = 'wss://api.hyperliquid.xyz/ws';
 
 // Configurable parameters
 const SNAPSHOT_MODE = 'preopen'; // or 'live'
-const TOP_N_ASSETS = 5;
-const MAX_COINS_TO_SUBSCRIBE = 10;
 
 // Spread/depth thresholds
 const MAX_SPREAD_PCT = 0.1; // 0.1%
@@ -21,6 +19,9 @@ const DEPTH_PCT = 1; // +-1% around mid price
 
 // Trade delta window (in ms)
 const TRADE_WINDOW_MS = 60 * 1000; // 1 minute
+const MID_HISTORY_WINDOW_MS = 3 * 60 * 1000; // 3 minutes
+const RETURN_30S_MS = 30 * 1000;
+const RETURN_120S_MS = 120 * 1000;
 
 function openDatabase() {
   const db = new Database(DB_PATH);
@@ -75,13 +76,12 @@ function getLatestReportAssets(db) {
       WHERE snapshot_mode = ?
         AND trading_date = ?
       ORDER BY rvol DESC
-      LIMIT ?
     `
     )
-    .all(SNAPSHOT_MODE, tradingDate, TOP_N_ASSETS);
+    .all(SNAPSHOT_MODE, tradingDate);
 
   console.log(
-    `Monitoring top ${assets.length} assets from report for trading_date=${tradingDate}, snapshot_mode=${SNAPSHOT_MODE}`
+    `Monitoring all ${assets.length} assets from report for trading_date=${tradingDate}, snapshot_mode=${SNAPSHOT_MODE}`
   );
 
   return assets.map((a) => a.asset);
@@ -93,8 +93,8 @@ function createWsConnection(coins) {
     process.exit(0);
   }
 
-  const coinsToUse = coins.slice(0, MAX_COINS_TO_SUBSCRIBE);
-  console.log('Subscribing to coins:', coinsToUse.join(', '));
+  console.log(`Subscribing to ${coins.length} coins from latest report.`);
+  console.log('Coins:', coins.join(', '));
 
   const state = createEmptyState();
 
@@ -104,7 +104,7 @@ function createWsConnection(coins) {
   ws.on('open', () => {
     console.log('WebSocket connected to Hyperliquid.');
 
-    for (const coin of coinsToUse) {
+    for (const coin of coins) {
       const subMsg = {
         method: 'subscribe',
         subscription: {
@@ -160,7 +160,50 @@ function createEmptyState() {
   return {
     books: new Map(), // coin -> { bids: [[px, qty], ...], asks: [[px, qty], ...] }
     trades: new Map(), // coin -> [{ side, px, sz, ts }, ...]
+    mids: new Map(), // coin -> [{ ts, mid }, ...]
   };
+}
+
+function pruneByTime(items, cutoffTs) {
+  if (!Array.isArray(items) || items.length === 0) return [];
+  return items.filter((x) => Number.isFinite(x.ts) && x.ts >= cutoffTs);
+}
+
+function upsertMidPoint(state, coin, mid, ts) {
+  if (!Number.isFinite(mid) || !Number.isFinite(ts)) return;
+  const nowTs = Date.now();
+  const cutoff = nowTs - MID_HISTORY_WINDOW_MS;
+
+  let arr = state.mids.get(coin);
+  if (!arr) {
+    arr = [];
+    state.mids.set(coin, arr);
+  }
+
+  arr.push({ ts, mid });
+  state.mids.set(coin, pruneByTime(arr, cutoff));
+}
+
+function findLatestMidAtOrBefore(midSeries, targetTs) {
+  if (!Array.isArray(midSeries) || midSeries.length === 0) return null;
+  for (let i = midSeries.length - 1; i >= 0; i--) {
+    const p = midSeries[i];
+    if (p.ts <= targetTs && Number.isFinite(p.mid) && p.mid > 0) {
+      return p.mid;
+    }
+  }
+  return null;
+}
+
+function computeReturnPct(midSeries, windowMs, nowTs) {
+  if (!Array.isArray(midSeries) || midSeries.length === 0) return null;
+  const latest = midSeries[midSeries.length - 1];
+  if (!latest || !Number.isFinite(latest.mid) || latest.mid <= 0) return null;
+
+  const pastMid = findLatestMidAtOrBefore(midSeries, nowTs - windowMs);
+  if (!Number.isFinite(pastMid) || pastMid <= 0) return null;
+
+  return ((latest.mid - pastMid) / pastMid) * 100;
 }
 
 function handleChannelMessage(state, msg) {
@@ -174,6 +217,7 @@ function handleChannelMessage(state, msg) {
 
     const coin = data.coin;
     const [rawBids, rawAsks] = data.levels;
+    const ts = typeof data.time === 'number' ? data.time : Date.now();
 
     if (!Array.isArray(rawBids) || !Array.isArray(rawAsks)) return;
 
@@ -189,6 +233,13 @@ function handleChannelMessage(state, msg) {
     if (bids.length === 0 || asks.length === 0) return;
 
     state.books.set(coin, { bids, asks });
+
+    const bestBid = bids[0][0];
+    const bestAsk = asks[0][0];
+    if (Number.isFinite(bestBid) && Number.isFinite(bestAsk) && bestBid > 0 && bestAsk > 0) {
+      const mid = (bestBid + bestAsk) / 2;
+      upsertMidPoint(state, coin, mid, ts);
+    }
   }
 
   // Hyperliquid trades shape:
@@ -231,10 +282,7 @@ function handleChannelMessage(state, msg) {
     const cutoff = nowTs - TRADE_WINDOW_MS;
 
     for (const [coin, arr] of state.trades.entries()) {
-      state.trades.set(
-        coin,
-        arr.filter((t) => t.ts >= cutoff)
-      );
+      state.trades.set(coin, arr.filter((t) => t.ts >= cutoff));
     }
   }
 }
@@ -322,6 +370,7 @@ function computeTradeDelta(trades) {
 
 function buildLiveRows(state) {
   const rows = [];
+  const nowTs = Date.now();
 
   for (const [coin, book] of state.books.entries()) {
     const spreadDepth = computeSpreadAndDepth(book);
@@ -336,11 +385,22 @@ function buildLiveRows(state) {
     const isDirectionStrong = Math.abs(deltaStats.imbalancePct) >= 20; // configurable
 
     const totalDepth = spreadDepth.bidDepth + spreadDepth.askDepth;
+    const mids = state.mids.get(coin) || [];
+    const ret30sPct = computeReturnPct(mids, RETURN_30S_MS, nowTs);
+    const ret120sPct = computeReturnPct(mids, RETURN_120S_MS, nowTs);
+    const absMovePct =
+      Number.isFinite(ret30sPct) || Number.isFinite(ret120sPct)
+        ? (Math.abs(ret30sPct || 0) + Math.abs(ret120sPct || 0)) / 2
+        : 0;
 
-    // Simple ranking score: prefer tight spread, big depth, strong directional flow
-    const score = isSpreadOk
-      ? Math.abs(deltaStats.imbalancePct) * (totalDepth / 1_000_000)
-      : 0;
+    // Ranking score combines:
+    // - order flow / liquidity
+    // - short-term movement (30s and 120s)
+    // - spread penalty so wide markets are de-prioritized
+    const flowScore = Math.abs(deltaStats.imbalancePct) * Math.log10(1 + totalDepth / 100_000);
+    const movementScore = 0.7 * Math.abs(ret30sPct || 0) + 0.3 * Math.abs(ret120sPct || 0);
+    const spreadPenalty = Math.max(0, 1 - spreadDepth.spreadPct / 0.2);
+    const score = spreadPenalty * (0.6 * flowScore + 0.4 * movementScore * 100);
 
     rows.push({
       coin,
@@ -350,6 +410,9 @@ function buildLiveRows(state) {
       totalDepth,
       delta: deltaStats.delta,
       imbalancePct: deltaStats.imbalancePct,
+      ret30sPct: Number.isFinite(ret30sPct) ? ret30sPct : null,
+      ret120sPct: Number.isFinite(ret120sPct) ? ret120sPct : null,
+      absMovePct,
       isSpreadOk,
       isDirectionStrong,
       score,
@@ -378,6 +441,8 @@ function printLiveMetricsFromRows(rows) {
       [`Depth ±${DEPTH_PCT}% ($)`]: r.totalDepth.toFixed(0),
       'Delta ($)': r.delta.toFixed(0),
       'Imbalance %': r.imbalancePct.toFixed(1),
+      'Move 30s %': Number.isFinite(r.ret30sPct) ? r.ret30sPct.toFixed(2) : 'n/a',
+      'Move 120s %': Number.isFinite(r.ret120sPct) ? r.ret120sPct.toFixed(2) : 'n/a',
       'Tight Spread': r.isSpreadOk,
       'Directional': r.isDirectionStrong,
     }))
@@ -389,7 +454,11 @@ function printLiveMetricsFromRows(rows) {
       2
     )} | spread=${top.spreadPct.toFixed(3)}% | depth±${DEPTH_PCT}%=$${top.totalDepth.toFixed(
       0
-    )} | delta=$${top.delta.toFixed(0)} | imbalance=${top.imbalancePct.toFixed(1)}%`
+    )} | delta=$${top.delta.toFixed(0)} | imbalance=${top.imbalancePct.toFixed(
+      1
+    )}% | move30s=${Number.isFinite(top.ret30sPct) ? top.ret30sPct.toFixed(2) : 'n/a'}% | move120s=${
+      Number.isFinite(top.ret120sPct) ? top.ret120sPct.toFixed(2) : 'n/a'
+    }%`
   );
 }
 
